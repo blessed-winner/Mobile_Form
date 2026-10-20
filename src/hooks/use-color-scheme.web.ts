@@ -8,7 +8,11 @@ export function useColorScheme() {
   const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
-    setHasHydrated(true);
+    // Schedule update so it runs after render commit without cascading synchronous warning
+    const id = requestAnimationFrame(() => {
+      setHasHydrated(true);
+    });
+    return () => cancelAnimationFrame(id);
   }, []);
 
   const colorScheme = useRNColorScheme();
